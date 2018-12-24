@@ -35,6 +35,7 @@ class Game:
                         x_change = 0
                         y_change = Config['snake']['speed']
 
+            # Fill background and draw game area
             self.display.fill(Config['colors']['green'])
 
             pygame.draw.rect(
@@ -47,6 +48,33 @@ class Game:
                     Config['game']['width'] - Config['game']['bumper_size'] * 2
                 ]
             )
+
+            # Draw an apple
+
+            # Initialize font and draw title and score text
+            pygame.font.init()
+            font = pygame.font.Font('./assets/Now-Regular.otf', 28)
+
+            score_text = 'Score: {}'.format(self.score)
+            score = font.render(score_text, True, Config['colors']['white'])
+            title = font.render('Anaconda', True, Config['colors']['white'])
+
+            title_rect = title.get_rect(
+                center=(
+                    Config['game']['width'] / 2,
+                    Config['game']['bumper_size'] / 2
+                )
+            )
+
+            score_rect = score.get_rect(
+                center=(
+                    500/2,
+                    Config['game']['height'] - Config['game']['bumper_size'] / 2
+                )
+            )
+
+            self.display.blit(score, score_rect)
+            self.display.blit(title, title_rect)
 
 
             snake.move(x_change, y_change)
