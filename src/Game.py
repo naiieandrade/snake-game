@@ -2,6 +2,7 @@ import pygame
 
 from src.Config import Config
 from src.Snake import Snake
+from src.Apple import Apple
 
 
 class Game:
@@ -12,9 +13,12 @@ class Game:
     def loop(self):
         clock = pygame.time.Clock()
         snake = Snake(self.display)
+        apple = Apple(self.display)
 
         x_change = 0
         y_change = 0
+
+        self.score = 0
 
         while True:
             for event in pygame.event.get():
@@ -50,6 +54,12 @@ class Game:
             )
 
             # Draw an apple
+            apple_rect = apple.draw()
+
+            # Move and re-draw Snake
+            snake.move(x_change, y_change)
+            snake_rect = snake.draw()
+            snake.draw_body()
 
             # Detect collison with wall
             bumper_x = Config['game']['width'] - Config['game']['bumper_size']
@@ -63,6 +73,17 @@ class Game:
             ):
                 self.loop()
 
+            # Detect collision with apple
+            if apple_rect.colliderect(snake_rect):
+                apple.randomize()
+                self.score += 1
+                snake.eat()
+
+            # Collide with self
+            if len(snake.body) >= 1:
+                for cell in snake.body:
+                    if snake.x_pos == cell[0] and snake.y_pos == cell[1]:
+                        self.loop()
 
             # Initialize font and draw title and score text
             pygame.font.init()
@@ -88,10 +109,6 @@ class Game:
 
             self.display.blit(score, score_rect)
             self.display.blit(title, title_rect)
-
-
-            snake.move(x_change, y_change)
-            snake.draw()
 
             pygame.display.update()
             clock.tick(Config['game']['fps'])
