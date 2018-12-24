@@ -10,7 +10,7 @@ class Snake:
         self.display = display
 
     def draw(self):
-        pygame.draw.rect(
+        return pygame.draw.rect(
             self.display,
             Config['colors']['green'],
             [
