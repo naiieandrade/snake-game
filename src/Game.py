@@ -51,6 +51,19 @@ class Game:
 
             # Draw an apple
 
+            # Detect collison with wall
+            bumper_x = Config['game']['width'] - Config['game']['bumper_size']
+            bumper_y = Config['game']['height'] - Config['game']['bumper_size']
+
+            if(
+                snake.x_pos < Config['game']['bumper_size'] or
+                snake.y_pos < Config['game']['bumper_size'] or
+                snake.x_pos + Config['snake']['width'] > bumper_x or
+                snake.y_pos + Config['snake']['height'] > bumper_y
+            ):
+                self.loop()
+
+
             # Initialize font and draw title and score text
             pygame.font.init()
             font = pygame.font.Font('./assets/Now-Regular.otf', 28)
